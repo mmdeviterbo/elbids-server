@@ -9,10 +9,14 @@ import resolvers from './resolvers';
 import returnDatabase from './dbSetup'
 import utils from './_utils'
 import 'dotenv/config'
+const path = require('path')
+
 
 const app = express();
 const MONGO_URI = process.env.MONGO_URI
-const PORT = process.env.NODE_ENV ==='production'? process.env.PROD_URI : process.env.DEV_URI
+// const PORT = process.env.NODE_ENV ==='production'? process.env.PROD_URI : process.env.DEV_URI
+const PORT = process.env.DEV_URI || 3001
+
 
 const server = async(app : express.Express): Promise<void> =>{
   try{
@@ -35,6 +39,12 @@ const server = async(app : express.Express): Promise<void> =>{
 
     const httpServer = http.createServer(app)
     httpServer.setTimeout(10 * 60 * 1000)
+
+    app.use(express.static('public'))
+    app.get('*', (req,res)=>{
+      res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+    })
+
     httpServer.listen(PORT,(): void => {
         console.log(`Listening to port ${PORT}`)
     })
