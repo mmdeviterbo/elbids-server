@@ -3,7 +3,15 @@ import { ObjectId } from 'bson'
 
 export default async function findOneUser(parent, args, context){
   if(parent){
-    return await context.users.findOne({ _id : new ObjectId( parent.user_id )})
+    let userId
+    if(parent?.user_id) userId = parent.user_id
+    else if(parent?.seller_id) userId = parent?.seller_id
+    else if(parent?.buyer_id) userId = parent?.buyer_id
+    else if(parent?.user_id) userId = parent?.user_id
+    
+    if(userId){
+      return await context.users.findOne({ _id : new ObjectId( userId )})
+    }
   }
 
   const {
@@ -17,7 +25,7 @@ export default async function findOneUser(parent, args, context){
     id,
     admin,
     following_ids,
-    like_ids
+    favorite_ids
   } = args
   if(!email && !_id) return null
 
@@ -33,7 +41,7 @@ export default async function findOneUser(parent, args, context){
   if(id) userArgs.id = new ObjectId(id)
   if(admin) userArgs.admin = admin
   if(following_ids) userArgs.following_ids = following_ids
-  if(like_ids) userArgs.like_ids = like_ids
+  if(favorite_ids) userArgs.favorite_ids = favorite_ids
   
   return await context.users.findOne({...userArgs})
 }

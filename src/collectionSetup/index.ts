@@ -11,6 +11,8 @@ export default (db : Db)=>{
         posts : db.collection('posts'),
         comments : db.collection('comments'),
         ids : db.collection('ids'),
-        currentUser: null
+        conversations : db.collection('conversations'),
+        messages : db.collection('messages'),
+        notifications : db.collection('notifications'),
     }
 }

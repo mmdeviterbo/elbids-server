@@ -1,13 +1,18 @@
 import { ObjectId } from 'bson';
 import { UserInputError } from 'apollo-server-express';
 
-export default async function findOnePost(_, args, context){
+export default async function findOnePost(parent, args, context){
   try{
-    const {_id, deleted, archived } = args
+    if(parent?.post_id){
+      return await context.posts.findOne({
+        _id: new ObjectId(parent?.post_id)
+      })
+    }
+
+    const {_id } = args
+    
     const res = await context.posts.findOne({
-      _id: new ObjectId(_id),
-      deleted,
-      archived
+      _id: new ObjectId(_id)
     })
     return res
   }catch(err){

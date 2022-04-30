@@ -17,14 +17,16 @@ const typeDefs = gql`
 		status: String!
 		token: String!
 		id: ID
+		id_image: Gallery
 		admin: Boolean
 		deactivated : Boolean	  #is deactivated
 	  banned : Boolean	      #is dismissed
 	  report_count : Int	    #if report count > 5, banned : true
   	notification_count: Int
-	  
+		password: String
+
 		following_ids: [ID]
-	  like_ids: [ID]
+	  favorite_ids: [ID]
 	}
 
 	type Item{
@@ -41,6 +43,7 @@ const typeDefs = gql`
 		date_first_bid: String
 		date_latest_bid: String
 		buyer_id: ID
+		buyer: User
 
 		gallery: Gallery
 		gallery_id:ID!
@@ -73,7 +76,9 @@ const typeDefs = gql`
 	type Post{
 		_id: ID!
 		seller_id : ID!
+		seller: User
 		category: String!
+		item_id: ID
 		item: Item!
 		deleted : Boolean!
 		archived: Boolean!	#item already bought
@@ -88,6 +93,36 @@ const typeDefs = gql`
 		deleted : Boolean
 	}
 
+
+	type Message{         #list of messages between two people
+  	_id: ID
+	  conversation_id: ID!
+	  user_id: ID!
+  	user: User
+  	message: String!
+  	date_created: String
+	}
+
+	type Conversation{    #list of people
+  	_id: ID!
+		user_ids:  [ID]
+		users: [User]
+		message: [Message]
+  	date_created: String
+  	deleted: Boolean
+	}
+
+	type Notification{
+		_id: ID!
+		post_id: ID!
+		post: Post
+		user_id: ID!
+		read: Boolean!
+		current_bid: Int
+		type: String!	#bought, sold, following
+		date_created: String!
+	}
+
 	type Query{
 		findOneUser(
 			email: String
@@ -97,9 +132,9 @@ const typeDefs = gql`
 		findManyUsers(
 			email: String!,
 			status: String,
-			deactivated: String,
-			banned: String,
-			admin: String
+			deactivated: Boolean,
+			banned: Boolean,
+			admin: Boolean
 		): [User]
 
 		findManyPosts(
@@ -112,11 +147,38 @@ const typeDefs = gql`
 			category: String
 		): [Post]
 
+		findSummaryReportPosts(
+			_id: ID!
+  		archived: Boolean
+  		timer: String
+  		category: String			
+		): [Post]
+
 		findOnePost(
 			_id: ID!
-			deleted : Boolean!
-			archived: Boolean!
+			deleted : Boolean
+			archived: Boolean
 		):Post
+
+		findManyFavorites(
+			email: String!
+			_id: ID!
+		): [Post]
+		
+		findManyBought(
+			email: String!
+			_id: ID!
+		):[Post]
+
+		findManyFollowing(
+			email: String!
+			_id: ID!
+		):[Post]
+
+		findManyMyPosts(
+			email: String!
+			_id: ID!
+		):[Post]
 
 		findManyComments(
 			post_id: ID!
@@ -125,6 +187,24 @@ const typeDefs = gql`
 		findOneGallery(
 			_id: ID!
 		): Gallery
+
+		findOneConversation(
+			_id: ID
+			user_ids: [ID!]!
+		): Conversation
+
+		findManyConversations(
+			user_ids: [ID!]!
+		): [Conversation]
+
+		findManyMessages(
+			conversation_id: ID!
+		): [Message]
+
+		findManyNotifications(
+			user_id: ID!
+		): [Notification]
+
 	}
 
 	type Mutation{
@@ -145,6 +225,7 @@ const typeDefs = gql`
 		): User
 
 		updateOneUser(
+			_id: ID
 			email: String
 			status: String
   		deactivated: Boolean
@@ -154,13 +235,17 @@ const typeDefs = gql`
 			id: ID
 			admin: Boolean
 			following_id: ID
-			like_id: ID
+			favorite_id: ID
+			isFavorite: Boolean
+    	isFollow: Boolean
+			password: String
 		): User
 
 		insertPost(
 			_id: ID!
 			seller_id : ID!
 			category: String!
+			item_id: ID
 			item: ItemInput!
 			deleted : Boolean!
 			archived: Boolean!
@@ -203,7 +288,21 @@ const typeDefs = gql`
 		deleteOnePost(
 			_id: ID!
 		): Post
-			
+
+		insertOneConversation(
+			_id: ID!
+			user_ids: [ID!]!
+		): Conversation
+
+		insertOneMessage(
+  		conversation_id: ID!
+  		user_id: ID!
+  		message: String!
+		): Message
+
+		updateManyNotifications(
+			user_id: ID!
+		): Notification
 	}
 `
 export default typeDefs

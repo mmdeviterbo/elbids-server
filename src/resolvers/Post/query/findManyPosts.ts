@@ -4,6 +4,7 @@ import { ObjectId } from 'bson';
 import formatDate from '../../../_utils/formatDate'
 var Countdown = require('countdown-js')
 
+//ONLY archived: true here (all sold posts)
 
 const getLengthTime=(timer: TIMER_OPTIONS): number =>{
   let lengthTime: number = 0
@@ -46,7 +47,24 @@ export default async function findManyPosts(_, args: PostFilter, context){
       }
     }
     let items: Item[] =  await context.items.find().toArray()
-    let posts: Post[] = await context.posts.find({ deleted: false, archived: false }).toArray()
+
+    let posts = await context.posts.aggregate([
+      {
+        $lookup:{
+          localField: "seller_id",
+          from: "users",
+          foreignField:"_id",
+          as: "asUser"
+        }
+      },
+      {
+        $match: { "asUser.deactivated": false, "asUser.banned": false, deleted: false, archived: false }
+      },
+      {
+        $project: { asUser: 0 }
+      }
+    ]).toArray()
+    
     let postIds: ObjectId[] = []
 
     // start of checking the archives
@@ -178,11 +196,27 @@ export default async function findManyPosts(_, args: PostFilter, context){
         deleted: false,
         archived: false
       }).toArray()
-    }else posts = await context.posts.find({ deleted: false, archived: false }).toArray()
-
+    }else {
+      posts = await context.posts.aggregate([
+        {
+          $lookup:{
+            localField: "seller_id",
+            from: "users",
+            foreignField:"_id",
+            as: "asUser"
+          }
+        },
+        {
+          $match: { "asUser.deactivated": false, "asUser.banned": false, deleted: false, archived: false }
+        },
+        {
+          $project: { asUser: 0 }
+        }
+      ]).toArray()
+    
+    }
     return posts
   }catch(err){
-    console.log(err)
     throw new UserInputError('Failed to retrieve posts')
   }
 }

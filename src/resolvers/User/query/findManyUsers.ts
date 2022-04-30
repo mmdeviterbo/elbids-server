@@ -16,9 +16,9 @@ export default async function findManyUsers(_, args, context){
   }
   
   if(status) userArgs.status = status
-  if(deactivated) userArgs.deactivated = deactivated
-  if(banned) userArgs.banned = banned
-  if(admin) userArgs.admin = admin
+  if([true,false].includes(deactivated)) userArgs.deactivated = deactivated
+  if([true,false].includes(banned)) userArgs.banned = banned
+  if([true,false].includes(admin)) userArgs.admin = admin
   
   const user = await context.users.findOne({ email })
   

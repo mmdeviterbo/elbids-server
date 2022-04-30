@@ -12,11 +12,53 @@ import commentQuery from './Comment/query'
 
 import galleryQuery from './Gallery/query'
 
-const { insertOneUser, updateOneUser } = userMutation
-const { findOneUser, findManyUsers } = userQuery
+import messageQuery from './Message/query'
+import messageMutation from './Message/mutation'
 
-const { findManyPosts, findOnePost } = postQuery
-const { insertPost, updatePost, deleteOnePost } = postMutation
+import notificationQuery from './Notification/query'
+import notificationMutation from './Notification/mutation'
+
+
+const {
+  insertOneUser,
+  updateOneUser
+} = userMutation
+
+const {
+  findOneUser,
+  findManyUsers,
+  findTwoPersons,
+  findOneIdImage
+} = userQuery
+
+const { 
+  findManyPosts,
+  findOnePost,
+  findManyFavorites, 
+  findManyBought,
+  findManyFollowing,
+  findManyMyPosts,
+  findSummaryReportPosts
+} = postQuery
+
+
+const { 
+  insertPost,
+  updateOnePost,
+  deleteOnePost 
+} = postMutation
+
+const {
+  findOneCoversation,
+  findManyConversations,
+  findManyMessages
+} = messageQuery
+
+const {
+  insertOneConversation,
+  insertOneMessage
+} = messageMutation
+
 
 const { findOneItem } = itemQuery
 const { updateItem } = itemMutation
@@ -26,11 +68,22 @@ const { findOneGallery } = galleryQuery
 const { insertOneComment } = commentMutation
 const { findManyComments } = commentQuery
 
+const { findManyNotifications } = notificationQuery
+const { updateManyNotifications } = notificationMutation
+
 const resolvers ={
+  User:{
+    id_image: async(parent, _, context)=>{
+      return await findOneIdImage(parent,_, context)
+    }
+  },
 	Post:{
 		item: async(parent, _, context)=>{
       return await findOneItem(parent, _, context)
-		}
+		},
+    seller: async(parent, _, context)=>{
+      return await findOneUser(parent, _, context)
+    }
 	},
 
   Comment:{
@@ -42,6 +95,28 @@ const resolvers ={
   Item:{
     gallery: async(parent, _, context)=>{
       return await findOneGallery(parent, _, context)
+    },
+    buyer: async(parent, _, context)=>{
+      return await findOneUser(parent, _, context)
+    }
+  },
+
+  Conversation:{
+    message: async(parent, _, context)=>{
+      return await findManyMessages(parent, _, context)
+    },
+    users: async(parent, _, context)=>{
+      return await findTwoPersons(parent, _, context)
+    }
+  },
+  Message:{
+    user: async(parent, _, context)=>{
+      return await findOneUser(parent, _, context)
+    }
+  },
+  Notification:{
+    post: async(parent, args, context)=>{
+      return await findOnePost(parent, args, context)
     }
   },
 
@@ -53,7 +128,15 @@ const resolvers ={
     async findManyUsers(_, args, context){
       return await findManyUsers(_, args, context)
     },
-
+    async findOneConversation(_, args, context){
+      return await findOneCoversation(_, args, context)
+    },
+    async findManyConversations(_, args, context){
+      return await findManyConversations(_, args, context)
+    },
+    async findManyMessages(_, args, context){
+      return await findManyMessages(_, args, context)
+    },
 
     // post
     async findManyPosts(_, args, context){
@@ -64,6 +147,24 @@ const resolvers ={
     },
     async findManyComments(_, args, context){
       return await findManyComments(_, args, context)
+    },
+    async findManyFavorites(_, args, context){
+      return await findManyFavorites(_, args, context)
+    },
+    async findManyBought(_, args, context){
+      return await findManyBought(_, args, context)
+    },
+    async findManyFollowing(_, args, context){
+      return await findManyFollowing(_, args, context)
+    },
+    async findManyMyPosts(_, args, context){
+      return await findManyMyPosts(_, args, context)
+    },
+    async findSummaryReportPosts(_, args, context){
+      return await findSummaryReportPosts(_, args, context)
+    },
+    async findManyNotifications(_, args, context){
+      return await findManyNotifications(_, args, context)
     }
   },
   Mutation:{
@@ -80,8 +181,8 @@ const resolvers ={
     async insertPost(_, args, context){
       return await insertPost(_, args, context)
     },
-    async updatePost(_, args, context){
-      return await updatePost(_, args, context)
+    async updateOnePost(_, args, context){
+      return await updateOnePost(_, args, context)
     },
     async deleteOnePost(_, args, context){
       return await deleteOnePost(_, args, context)
@@ -96,6 +197,20 @@ const resolvers ={
     async insertOneComment(_, args, context){
       return await insertOneComment(_, args, context)
     },
+
+    async insertOneConversation(_, args, context){
+      return await insertOneConversation(_, args, context)
+    },
+
+    async insertOneMessage(_, args, context){
+      return await insertOneMessage(_, args, context)
+    },
+
+
+    //notifications
+    async updateManyNotifications(_, args, context){
+      return await updateManyNotifications(_, args, context)
+    }
   }
 }
 export default resolvers

@@ -1,8 +1,9 @@
 import { ItemUpdateArgs } from "../../../types"
 import { UserInputError } from 'apollo-server-express';
 import { ObjectId } from 'bson';
+import checkFollowingNotification from "./checkFollowingNotification";
 
-const updateItem=async(_, args: ItemUpdateArgs, context): Promise<void>=>{
+const updateItem=async(_, args: ItemUpdateArgs, context)=>{
   const { _id, post_id, title, description, reason, date_updated, current_bid, date_first_bid, date_latest_bid, buyer_id } = args
 
   const updateItemArgs: ItemUpdateArgs = {}
@@ -21,13 +22,20 @@ const updateItem=async(_, args: ItemUpdateArgs, context): Promise<void>=>{
       { $set: {...updateItemArgs} }
     )
 
-    if(!current_bid){ //for sale
-      await context.posts.findOneAndUpdate(
-        { _id: new ObjectId(post_id) },
-        { $set: { archived: true } }
-      )
+    if(buyer_id){
+      await context.users.updateOne(
+        { _id: new ObjectId(buyer_id) },
+        { $addToSet: { following_ids: new ObjectId(post_id) } })
+      
+      await checkFollowingNotification(_, args, context)
     }
 
+    if(!current_bid && buyer_id){ //for sale
+      await context.posts.findOneAndUpdate(
+        { _id: new ObjectId(post_id) },
+        { $set: { archived: true } }  //in SALE category, u already bought the item so make it 'archived: true'
+      )
+    }
     return res.value
   }catch(err){
     throw new UserInputError('Failed to update item')

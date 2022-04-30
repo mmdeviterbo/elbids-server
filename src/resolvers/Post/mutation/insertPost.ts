@@ -19,8 +19,10 @@ export default async function insertPost(_, args, context){
     delete post.item
     const item_id = itemRes?.insertedId
     
+    post.item_id = new ObjectId(item_id)
+
     if(!item_id){
-      throw new UserInputError('Processing of item failed')
+      throw new UserInputError('Insertion of item failed')
     }
     
     const postRes = await context?.posts?.insertOne({...post})
