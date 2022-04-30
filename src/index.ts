@@ -1,9 +1,9 @@
 import { ApolloServer } from 'apollo-server-express'
 import { MongoClient } from 'mongodb'
-import * as http from 'http'
-import * as express from 'express'
-import * as upload from 'express-fileupload'
-import * as cors from 'cors'
+import http from 'http'
+import express from 'express'
+import upload from 'express-fileupload'
+import cors from 'cors'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers';
 import returnDatabase from './dbSetup'
@@ -12,7 +12,7 @@ import 'dotenv/config'
 
 const app = express();
 const MONGO_URI = process.env.MONGO_URI
-const PORT = process.env.DEV_URI || 3001
+const PORT = process.env.PORT || 8080
 
 const server = async(app : express.Express): Promise<void> =>{
   try{
