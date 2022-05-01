@@ -8,7 +8,6 @@ import typeDefs from './typeDefs'
 import resolvers from './resolvers';
 import returnDatabase from './dbSetup'
 import utils from './_utils'
-import path from 'path'
 import 'dotenv/config'
 
 const app = express();
@@ -33,7 +32,6 @@ const server = async(app : express.Express): Promise<void> =>{
 
     utils(app, mongoClient)
     apolloServer.applyMiddleware({ app })
-
 
     const httpServer = http.createServer(app)
     httpServer.setTimeout(10 * 60 * 1000)
