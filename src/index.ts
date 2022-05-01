@@ -34,6 +34,13 @@ const server = async(app : express.Express): Promise<void> =>{
     utils(app, mongoClient)
     apolloServer.applyMiddleware({ app })
 
+    if (process.env.NODE_ENV === "production") {
+      app.use(express.static("build"));
+      app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
+      });
+    }
+
     const httpServer = http.createServer(app)
     httpServer.setTimeout(10 * 60 * 1000)
     httpServer.listen(PORT,(): void => {
