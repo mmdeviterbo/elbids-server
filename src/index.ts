@@ -27,7 +27,9 @@ const server = async(app : express.Express): Promise<void> =>{
     const apolloServer = new ApolloServer({ 
       typeDefs, 
       resolvers,
-      context: ()=>returnDatabase(mongoClient)
+      context: ()=>returnDatabase(mongoClient),
+      introspection: true,
+      playground: true,
     })
 
     utils(app, mongoClient)
