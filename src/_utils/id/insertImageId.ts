@@ -11,10 +11,7 @@ export default function insertImageId(app: express.Express, db: Db){
         const newFile = await db.collection('ids').insertOne({
             data: [...imageData]
         })
-        const result = await db.collection('ids').findOne({
-          _id: new ObjectId(newFile?.insertedId)
-        })
-        res.send(result)
+        res.send({_id: newFile?.insertedId})
     }catch(err){
         res.send(null)
     }
