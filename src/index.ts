@@ -8,8 +8,8 @@ import typeDefs from './typeDefs'
 import resolvers from './resolvers';
 import returnDatabase from './dbSetup'
 import utils from './_utils'
-import 'dotenv/config'
 import path from 'path'
+import 'dotenv/config'
 
 const app = express();
 const MONGO_URI = process.env.MONGO_URI
@@ -24,6 +24,13 @@ const server = async(app : express.Express): Promise<void> =>{
     app.use(express.urlencoded({ extended: true }));
     app.use(upload())
     app.use(cors())
+    
+    if (process.env.NODE_ENV === "production") {
+      app.use(express.static("build"));
+      app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
+      });
+    }
 
     const apolloServer = new ApolloServer({ 
       typeDefs, 
@@ -34,12 +41,6 @@ const server = async(app : express.Express): Promise<void> =>{
     utils(app, mongoClient)
     apolloServer.applyMiddleware({ app })
 
-    if (process.env.NODE_ENV === "production") {
-      app.use(express.static("build"));
-      app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
-      });
-    }
 
     const httpServer = http.createServer(app)
     httpServer.setTimeout(10 * 60 * 1000)
