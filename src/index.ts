@@ -25,13 +25,6 @@ const server = async(app : express.Express): Promise<void> =>{
     app.use(upload())
     app.use(cors())
     
-    if (process.env.NODE_ENV === "production") {
-      app.use(express.static("build"));
-      app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
-      });
-    }
-
     const apolloServer = new ApolloServer({ 
       typeDefs, 
       resolvers,
