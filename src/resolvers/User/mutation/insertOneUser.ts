@@ -6,7 +6,7 @@ export default async(_, args, context)=>{
     const isExist = await context?.users?.findOne({ email })
     if(!isExist){
       const result = await context?.users?.insertOne({ ...args })
-      return {...result?.insertedId, ... args}
+      return {_id: result?.insertedId, ... args}
     }else return isExist
   }catch(err){
     throw new UserInputError('Invalid user')
