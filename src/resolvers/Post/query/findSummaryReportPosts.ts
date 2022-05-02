@@ -10,9 +10,6 @@ export default async function findSummaryReportPosts(_, args: SummaryReportArgs,
 
     if(!args?._id){
       throw new UserInputError('No _id, faied to retrieve sold items')
-    }else{
-      let res = await context.users.findOne({ _id })
-      if(!res?.admin) throw new UserInputError('Unauthorizated access, faied to retrieve posts')
     }
 
     let summaryReportArgs: SummaryReportArgs = {}
