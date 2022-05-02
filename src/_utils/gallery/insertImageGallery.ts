@@ -10,13 +10,11 @@ export default function insertManyImagesItem(app: express.Express, db: Db){
     if(Array.isArray(files)){
       files?.forEach((file)=>imageData.push(file.data))
     }else{
-      imageData?.push(files.data)
+      imageData?.push(files?.data)
     }
-
     try{
         const newFile = await db.collection('gallery').insertOne({ data : [ ...imageData ] })
-        const result = await db.collection('gallery').findOne({ _id : new ObjectId(newFile?.insertedId) })
-        res.send(result)
+        res.send({ _id: newFile?.insertedId })
     }catch(err){
         res.send(null)
     }

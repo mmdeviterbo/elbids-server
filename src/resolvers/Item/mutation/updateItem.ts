@@ -31,7 +31,7 @@ const updateItem=async(_, args: ItemUpdateArgs, context)=>{
     }
 
     if(!current_bid && buyer_id){ //for sale
-      await context.posts.findOneAndUpdate(
+      await context.posts.updateOne(
         { _id: new ObjectId(post_id) },
         { $set: { archived: true } }  //in SALE category, u already bought the item so make it 'archived: true'
       )

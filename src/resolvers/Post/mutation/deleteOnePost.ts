@@ -1,7 +1,7 @@
 import { ObjectId } from 'bson'
 import { UserInputError } from 'apollo-server-express'
 
-const deleteOnePost=async(_, args, context):Promise<void>=>{
+const deleteOnePost=async(_, args, context)=>{
   const { _id } = args
 
   if(!_id){
@@ -9,10 +9,10 @@ const deleteOnePost=async(_, args, context):Promise<void>=>{
   }
 
   try{
-    let res = await context.posts.findOneAndUpdate(
+    await context.posts.updateOne(
       { _id: new ObjectId(_id) }, 
       { $set:{ deleted: true } })
-    return res.value
+    return null
   }catch(err){
     throw new UserInputError('Failed to update post')
   }
