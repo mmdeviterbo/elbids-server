@@ -21,41 +21,48 @@ export default async function findManyPosts(_, args: PostFilter, context){
     let values = Object.values(args)
     let isFiltered: boolean = values?.find((value)=>value!==null)? true : false
     
-    values = values.filter((value)=>value!==null)
+    let valuesFiltered = values.filter((value)=>value!==null)
 
     if(isFiltered){
-      if(values?.length===1 && values[0]==="ANY"){
-        isFiltered = false
-      }
+      if(valuesFiltered?.length===1 && valuesFiltered[0]==="ANY") isFiltered = false
     }
 
-    // let posts = await context.posts.aggregate([
-    //   {
-    //     $lookup:{
-    //       localField: "seller_id",
-    //       from: "users",
-    //       foreignField:"_id",
-    //       as: "asUser"
-    //     }
-    //   },
-    //   {
-    //     $match: { "asUser.deactivated": false, "asUser.banned": false, deleted: false, archived: false }
-    //   },
-    //   {
-    //     $project: { asUser: 0 }
-    //   }
-    // ]).toArray()
-
-    let posts = await context.posts.find({archived: false, deleted: false}).toArray()
-
+    let posts = await context.posts.aggregate([
+      {
+        $lookup:{
+          localField: "seller_id",
+          from: "users",
+          foreignField:"_id",
+          as: "asUser"
+        }
+      },
+      {
+        $match: { "asUser.deactivated": false, "asUser.banned": false, deleted: false, archived: false }
+      },
+      {
+        $project: { asUser: 0 }
+      }
+    ]).toArray()
 
     let clonePosts = [...posts]
 
     if(isFiltered){
-      let items: Item[] =  await context.items.find({
-        date_first_bid: { $ne: null },
-        additional_bid: { $gt: 0 }
-      }).toArray()
+      let items: Item[] =  await context.items.aggregate([
+        {
+          $lookup:{
+            localField: "post_id",
+            from: "posts",
+            foreignField:"_id",
+            as:"postsRes"
+          }
+        },
+        {
+          $match: { "postsRes.archived" : false, "postsRes.deleted" : false}
+        },
+        {
+          $project: { postsRes: 0, gallery_id: 0 }
+        }
+      ]).toArray()
     
       if(search){
         items = items.filter((item: Item)=>item.title.toLowerCase().includes(search.toLowerCase()))
