@@ -123,6 +123,10 @@ const typeDefs = gql`
 		date_created: String!
 	}
 
+	type CheckerVoid{
+		_id: ID!
+	}
+
 	type Query{
 		findOneUser(
 			email: String
@@ -205,6 +209,9 @@ const typeDefs = gql`
 			user_id: ID!
 		): [Notification]
 
+		checkerTimerPosts(
+			_id: ID!
+		): CheckerVoid
 	}
 
 	type Mutation{

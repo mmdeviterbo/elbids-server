@@ -38,14 +38,15 @@ const {
   findManyBought,
   findManyFollowing,
   findManyMyPosts,
-  findSummaryReportPosts
+  findSummaryReportPosts,
+  checkerTimerPosts
 } = postQuery
 
 
 const { 
   insertPost,
   updateOnePost,
-  deleteOnePost 
+  deleteOnePost,
 } = postMutation
 
 const {
@@ -165,6 +166,11 @@ const resolvers ={
     },
     async findManyNotifications(_, args, context){
       return await findManyNotifications(_, args, context)
+    },
+
+    //checker timer posts in background
+    async checkerTimerPosts(_, args, context){
+      return await checkerTimerPosts(_, args, context)
     }
   },
   Mutation:{
@@ -205,7 +211,6 @@ const resolvers ={
     async insertOneMessage(_, args, context){
       return await insertOneMessage(_, args, context)
     },
-
 
     //notifications
     async updateManyNotifications(_, args, context){

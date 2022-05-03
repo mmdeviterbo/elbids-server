@@ -5,6 +5,7 @@ import findManyBought from './findManyBought'
 import findManyFollowing from './findManyFollowing'
 import findManyMyPosts from './findManyMyPosts'
 import findSummaryReportPosts from './findSummaryReportPosts'
+import checkerTimerPosts from './checkerTimerPosts'
 
 export default {
   findManyPosts,
@@ -13,5 +14,6 @@ export default {
   findManyBought,
   findManyFollowing,
   findManyMyPosts,
-  findSummaryReportPosts
+  findSummaryReportPosts,
+  checkerTimerPosts
 }
