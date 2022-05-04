@@ -127,6 +127,11 @@ const typeDefs = gql`
 		_id: ID!
 	}
 
+	type FavoriteFollowingLength{
+		lenFollowingPosts: Int!
+    lenFavoritePosts: Int!
+	}
+
 	type Query{
 		findOneUser(
 			email: String
@@ -212,6 +217,10 @@ const typeDefs = gql`
 		checkerTimerPosts(
 			_id: ID!
 		): CheckerVoid
+
+		findFavoriteFollowingLength(
+			post_id: ID!
+		): FavoriteFollowingLength
 	}
 
 	type Mutation{

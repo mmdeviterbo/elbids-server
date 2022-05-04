@@ -39,7 +39,8 @@ const {
   findManyFollowing,
   findManyMyPosts,
   findSummaryReportPosts,
-  checkerTimerPosts
+  checkerTimerPosts,
+  findFavoriteFollowingLength
 } = postQuery
 
 
@@ -171,6 +172,10 @@ const resolvers ={
     //checker timer posts in background
     async checkerTimerPosts(_, args, context){
       return await checkerTimerPosts(_, args, context)
+    },
+
+    async findFavoriteFollowingLength(_, args, context){
+      return await findFavoriteFollowingLength(_, args, context)
     }
   },
   Mutation:{
