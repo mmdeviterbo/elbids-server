@@ -318,7 +318,7 @@ const typeDefs = gql`
 
 		updateManyNotifications(
 			user_id: ID!
-		): Notification
+		): [Notification]
 	}
 `
 export default typeDefs

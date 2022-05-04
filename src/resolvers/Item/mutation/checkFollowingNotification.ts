@@ -42,7 +42,7 @@ export default async function checkFollowingNotification(_, args, context): Prom
       }else{
         await context.notifications.updateOne(
           {...followingNotifArgs},
-          { $set: { read: false, current_bid }}
+          { $set: { read: false, current_bid, date_created: new Date().toString() }}
         )
 
       }

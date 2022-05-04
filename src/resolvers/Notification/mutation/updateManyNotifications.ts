@@ -10,16 +10,13 @@ export default async function updateManyNotifications(_, args, context): Promise
   if(!user_id) {
     throw new UserInputError('Unauthorized access')
   }
-
-  let res
   try{
     await context.notifications.updateMany(
       { user_id: new ObjectId(user_id) },
       { $set: { read: true }},
     )
-    res = context.notifications.find({user_id: new ObjectId(user_id)}).toArray()
+    return await context.notifications.find({user_id: new ObjectId(user_id)}).toArray()
   }catch(err){
     return null
   }
-  return res
 }
