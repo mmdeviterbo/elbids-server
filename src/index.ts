@@ -42,7 +42,7 @@ const server = async(app : express.Express): Promise<void> =>{
     })
 
     setInterval(function() {
-      http.get("https://elbids.herokuapp.com/graphql");
+      http.get("https://elbids.herokuapp.com");
     }, 300000); // every 5 minutes (300000)
 
   }catch(err){
