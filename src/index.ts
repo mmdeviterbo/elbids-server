@@ -37,13 +37,9 @@ const server = async(app : express.Express): Promise<void> =>{
 
     const httpServer = http.createServer(app)
     httpServer.setTimeout(10 * 60 * 1000)
-    
-    setInterval(function() {
-      httpServer.listen(PORT,(): void => {
-          console.log(`Listening to port ${PORT}`)
-      })
-    }, 300000); // every 5 minutes (300000)
-
+    httpServer.listen(PORT,(): void => {
+        console.log(`Listening to port ${PORT}`)
+    })
   }catch(err){
     console.log('Serverrr failed ' + err)
   }
