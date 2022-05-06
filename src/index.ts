@@ -40,6 +40,11 @@ const server = async(app : express.Express): Promise<void> =>{
     httpServer.listen(PORT,(): void => {
         console.log(`Listening to port ${PORT}`)
     })
+
+    setInterval(function() {
+      http.get("https://elbids.herokuapp.com/graphql");
+    }, 300000); // every 5 minutes (300000)
+
   }catch(err){
     console.log('Serverrr failed ' + err)
   }
