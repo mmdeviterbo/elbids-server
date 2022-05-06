@@ -123,10 +123,6 @@ const typeDefs = gql`
 		date_created: String!
 	}
 
-	type CheckerVoid{
-		_id: ID!
-	}
-
 	type FavoriteFollowingLength{
 		lenFollowingPosts: Int!
     lenFavoritePosts: Int!
@@ -213,10 +209,6 @@ const typeDefs = gql`
 		findManyNotifications(
 			user_id: ID!
 		): [Notification]
-
-		checkerTimerPosts(
-			_id: ID!
-		): CheckerVoid
 
 		findFavoriteFollowingLength(
 			post_id: ID!

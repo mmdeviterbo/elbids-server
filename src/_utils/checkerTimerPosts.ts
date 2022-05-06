@@ -1,5 +1,6 @@
-import { Item, Post, TIMER_OPTIONS } from '../../../types'
+import { Item, Post, TIMER_OPTIONS } from '../types'
 import { ObjectId } from 'bson';
+import { Db } from 'mongodb'
 var Countdown = require('countdown-js')
 
 const getLengthTime=(timer: TIMER_OPTIONS): number =>{
@@ -26,10 +27,13 @@ const isTimerFinished=(item: Item): boolean =>{
   return res
 }
 
-export default async(_, args, context)=>{
-  if(!args?._id) return { _id : new ObjectId().toString() }
-  
-  let items: Item[] =  await context.items.find({
+export default async(db: Db): Promise<void>=>{
+  let context = {
+    items: db.collection('items'),
+    posts: db.collection('posts')
+  }
+
+  let items =  await context.items.find({
     date_first_bid: { $ne: null },
     additional_bid: { $gt: 0 }
   }).toArray()
@@ -52,8 +56,8 @@ export default async(_, args, context)=>{
   ]).toArray()
   
   // start of checking the archives
-  let bidItems: Item[] = []
-  items.forEach((item: Item)=>{
+  let bidItems = []
+  items.forEach((item)=>{
     posts.forEach((post: Post)=>{
       if(post._id.equals(item.post_id)) bidItems.push(item)
     })
@@ -61,7 +65,7 @@ export default async(_, args, context)=>{
 
   let bidItemsIds: ObjectId[] = []
   bidItems.forEach(async(item: Item): Promise<void>=>{
-    if(isTimerFinished(item)) bidItemsIds.push(item.post_id)
+    if(isTimerFinished(item)) bidItemsIds.push(item?.post_id)
   })
 
   if(bidItemsIds.length){
@@ -70,5 +74,4 @@ export default async(_, args, context)=>{
       { $set: { archived : true} },
     )
   }
-  return { _id: args?._id } 
 }

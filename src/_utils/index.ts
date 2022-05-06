@@ -6,6 +6,7 @@ import insertImageGallery from './gallery/insertImageGallery'
 import insertImageAsset from './asset/insertImageAsset';
 import insertImageId from './id/insertImageId';
 import findImageGallery from './gallery/findImageGallery';
+import checkerTimerPosts from './checkerTimerPosts';
 
 const utils = (app: express.Express, mongoClient: MongoClient)=>{
     const db : Db = mongoClient.db(process.env.DB_NAME)
@@ -20,5 +21,12 @@ const utils = (app: express.Express, mongoClient: MongoClient)=>{
 
     // user image ids
     insertImageId(app, db)
+
+
+    //run in the background
+    setInterval(()=>{
+        checkerTimerPosts(db)
+    },5000)
+
 }
 export default utils

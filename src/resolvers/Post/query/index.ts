@@ -5,7 +5,6 @@ import findManyBought from './findManyBought'
 import findManyFollowing from './findManyFollowing'
 import findManyMyPosts from './findManyMyPosts'
 import findSummaryReportPosts from './findSummaryReportPosts'
-import checkerTimerPosts from './checkerTimerPosts'
 import findFavoriteFollowingLength from './findFavoriteFollowingLength'
 
 export default {
@@ -16,6 +15,5 @@ export default {
   findManyFollowing,
   findManyMyPosts,
   findSummaryReportPosts,
-  checkerTimerPosts,
   findFavoriteFollowingLength
 }
