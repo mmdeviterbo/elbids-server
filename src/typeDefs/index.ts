@@ -128,6 +128,14 @@ const typeDefs = gql`
     lenFavoritePosts: Int!
 	}
 
+	type Analytics{
+		users_count: Int!
+		posts_count: Int!
+		sold_count: Int!
+		total_cost: Int!
+	}
+
+
 	type Query{
 		findOneUser(
 			email: String
@@ -213,6 +221,8 @@ const typeDefs = gql`
 		findFavoriteFollowingLength(
 			post_id: ID!
 		): FavoriteFollowingLength
+
+		findAnalytics: Analytics
 	}
 
 	type Mutation{

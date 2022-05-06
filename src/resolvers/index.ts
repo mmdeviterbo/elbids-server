@@ -39,7 +39,8 @@ const {
   findManyFollowing,
   findManyMyPosts,
   findSummaryReportPosts,
-  findFavoriteFollowingLength
+  findFavoriteFollowingLength,
+  findAnalytics
 } = postQuery
 
 
@@ -170,7 +171,11 @@ const resolvers ={
 
     async findFavoriteFollowingLength(_, args, context){
       return await findFavoriteFollowingLength(_, args, context)
-    }
+    },
+    
+    async findAnalytics(_, args, context){
+      return await findAnalytics(_, args, context)
+    },
   },
   Mutation:{
     // user 

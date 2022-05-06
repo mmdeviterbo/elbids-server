@@ -284,3 +284,10 @@ export interface InsertOneNotification{
 export interface FindManyNotification{
   user_id: ObjectId
 }
+
+export interface Analytics{
+  users_count?: Number
+  posts_count?: Number
+  sold_count?: Number
+  total_cost?: Number
+}
