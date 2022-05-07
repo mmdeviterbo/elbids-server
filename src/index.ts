@@ -4,6 +4,7 @@ import http from 'http'
 import express from 'express'
 import upload from 'express-fileupload'
 import cors from 'cors'
+import helmet from 'helmet'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers';
 import returnDatabase from './dbSetup'
@@ -23,6 +24,7 @@ const server = async(app : express.Express): Promise<void> =>{
     app.use(express.urlencoded({ extended: true }));
     app.use(upload())
     app.use(cors())
+    app.use(helmet())
     
     const apolloServer = new ApolloServer({ 
       typeDefs, 

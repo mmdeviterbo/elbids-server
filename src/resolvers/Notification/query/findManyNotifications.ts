@@ -17,7 +17,7 @@ export default async function findManyNotifications(_, args: FindManyNotificatio
 
   let res = await context.notifications.find({
     user_id : new ObjectId(user_id)
-  }).toArray()
+  }).sort({$natural: -1}).limit(8).toArray()
 
   return res
 }
